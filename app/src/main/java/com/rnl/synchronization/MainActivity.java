@@ -1,4 +1,5 @@
 package com.rnl.synchronization;
+import android.app.ListFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -14,6 +15,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private ResideMenuItem itemUser;
     private ResideMenuItem itemMusic;
     private ResideMenuItem itemCamera;
+    private ResideMenuItem itemList;
 
     /**
      * Called when the activity is first created.
@@ -25,7 +27,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mContext = this;
         setUpMenu();
         if (savedInstanceState == null)
-            changeFragment(new HomeFragment());
+            changeFragment(new HomeFragment(), null);
     }
 
     private void setUpMenu() {
@@ -44,16 +46,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         itemUser = new ResideMenuItem(this, R.drawable.profile_icon, "Users");
         itemMusic = new ResideMenuItem(this, R.drawable.music_icon, "Music");
         itemCamera = new ResideMenuItem(this, R.drawable.camera_icon, "Camera");
+        itemList = new ResideMenuItem(this, R.drawable.home_icon, "Device List");
 
         itemHome.setOnClickListener(this);
         itemUser.setOnClickListener(this);
         itemMusic.setOnClickListener(this);
         itemCamera.setOnClickListener(this);
+        itemList.setOnClickListener(this);
 
         resideMenu.addMenuItem(itemHome, ResideMenu.DIRECTION_LEFT);
         resideMenu.addMenuItem(itemUser, ResideMenu.DIRECTION_LEFT);
         resideMenu.addMenuItem(itemMusic, ResideMenu.DIRECTION_RIGHT);
         resideMenu.addMenuItem(itemCamera, ResideMenu.DIRECTION_RIGHT);
+        resideMenu.addMenuItem(itemList, ResideMenu.DIRECTION_RIGHT);
 
         // You can disable a direction by setting ->
         // resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
@@ -82,14 +87,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onClick(View view) {
 
         if (view == itemHome) {
-            changeFragment(new HomeFragment());
+            changeFragment(new HomeFragment(), null);
         } else if (view == itemUser) {
-            changeFragment(new UserFragment());
+            changeFragment(new UserFragment(), null);
         } else if (view == itemMusic) {
-            changeFragment(new MusicFragment());
+            changeFragment(new MusicFragment(), null);
         } else if (view == itemCamera) {
-            changeFragment(new CameraFragment());
+            changeFragment(new CameraFragment(), null);
+        } else if (view == itemList) {
+            changeFragment(null, new DeviceListFragment());
         }
+
 
         resideMenu.closeMenu();
     }
@@ -104,13 +112,25 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     };
 
-    private void changeFragment(Fragment targetFragment) {
+    private void changeFragment(Fragment targetFragment, ListFragment secondaryFragment) {
         resideMenu.clearIgnoredViewList();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.main_fragment, targetFragment, "fragment")
-                .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit();
+
+        if(targetFragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_fragment, targetFragment, "fragment")
+                    .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .commit();
+        }
+
+        if(secondaryFragment != null)
+        {
+            getFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_fragment, secondaryFragment, "fragment")
+                    .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .commit();
+        }
     }
 
     // What good method is to access resideMenu？
