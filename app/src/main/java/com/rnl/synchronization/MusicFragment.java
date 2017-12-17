@@ -14,7 +14,7 @@ import android.widget.*;
 import java.util.ArrayList;
 
 
-public class MusicFragment extends Fragment {
+public class MusicFragment extends ServiceFragment {
     private View parentView;
     private ListView listView;
     Fragment someFragment;
