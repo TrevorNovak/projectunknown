@@ -1,11 +1,13 @@
 package com.rnl.synchronization;
+
+import android.app.Fragment;
 import android.app.ListFragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
+import android.app.FragmentTransaction;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
@@ -95,7 +97,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         } else if (view == itemCamera) {
             changeFragment(new CameraFragment(), null);
         } else if (view == itemList) {
-            changeFragment(null, new DeviceListFragment());
+            try {
+                changeFragment(null, new WiFiDirectServicesList());
+            } catch(Exception e) {
+                Toast.makeText(getApplicationContext(), "Error: " + e, Toast.LENGTH_LONG);
+            }
         }
 
 
@@ -116,7 +122,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         resideMenu.clearIgnoredViewList();
 
         if(targetFragment != null) {
-            getSupportFragmentManager()
+            getFragmentManager()
                     .beginTransaction()
                     .replace(R.id.main_fragment, targetFragment, "fragment")
                     .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -127,9 +133,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         {
             getFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.main_fragment, secondaryFragment, "fragment")
+                    .replace(R.id.main_fragment, secondaryFragment, "secfragment")
                     .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .commit();
+
         }
     }
 
