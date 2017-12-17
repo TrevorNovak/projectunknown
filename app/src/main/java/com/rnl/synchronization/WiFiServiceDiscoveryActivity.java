@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pManager;
-import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
 import android.os.Bundle;
@@ -59,25 +58,12 @@ public class WiFiServiceDiscoveryActivity extends Activity  {
     }
     @Override
     protected void onStop() {
-        network.stopNetworkService(false);
-        if (manager != null && channel != null) {
-            manager.removeGroup(channel, new ActionListener() {
-                @Override
-                public void onFailure(int reasonCode) {
-                    Log.d(TAG, "Disconnect failed. Reason :" + reasonCode);
-                }
-                @Override
-                public void onSuccess() {
-                }
-            });
-        }
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        network.stopNetworkService(false);
     }
     /**
      * Registers a local service and then initiates a service discovery
@@ -86,12 +72,9 @@ public class WiFiServiceDiscoveryActivity extends Activity  {
     @Override
     public void onResume() {
         super.onResume();
-        receiver = new WiFiDirectBroadcastReceiver(manager, channel, this);
-        registerReceiver(receiver, intentFilter);
     }
     @Override
     public void onPause() {
         super.onPause();
-        unregisterReceiver(receiver);
     }
 }

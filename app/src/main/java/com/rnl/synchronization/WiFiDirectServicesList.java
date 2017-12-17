@@ -1,6 +1,7 @@
 package com.rnl.synchronization;
 
 import android.app.ListFragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,9 @@ import android.widget.TextView;
 
 import com.peak.salut.Callbacks.SalutCallback;
 import com.peak.salut.SalutDevice;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.rnl.synchronization.MainActivity.network;
 import static com.rnl.synchronization.WiFiServiceDiscoveryActivity.TAG;
@@ -32,7 +36,10 @@ public class WiFiDirectServicesList extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        listAdapter = new ArrayAdapter<SalutDevice>(this.getActivity(), android.R.layout.simple_list_item_2, android.R.id.text1);
+        listAdapter = new DevicesAdapter(this.getActivity(),
+                android.R.layout.simple_list_item_2,
+                android.R.id.text1,
+                new ArrayList<SalutDevice>());
         setListAdapter(listAdapter);
     }
 
@@ -63,7 +70,37 @@ public class WiFiDirectServicesList extends ListFragment {
         });
     }
 
+    public class DevicesAdapter extends ArrayAdapter<SalutDevice> {
+        private List<SalutDevice> items;
+
+        public DevicesAdapter(Context context, int resource,
+                              int textViewResourceId, List<SalutDevice> items) {
+            super(context, resource, textViewResourceId, items);
+            this.items = items;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View v = convertView;
+            if (v == null) {
+                LayoutInflater vi = (LayoutInflater) getActivity()
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                v = vi.inflate(android.R.layout.simple_list_item_2, null);
+            }
+            SalutDevice service = items.get(position);
+            if (service != null) {
+                TextView nameText = (TextView) v
+                        .findViewById(android.R.id.text1);
+                if (nameText != null) {
+                    nameText.setText(service.deviceName);
+                }
+            }
+            return v;
+        }
+    }
+
     public void addDevice(SalutDevice device) {
+        Log.d(TAG, "adding device " + device.deviceName);
         listAdapter.add(device);
         listAdapter.notifyDataSetChanged();
     }

@@ -8,9 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bluelinelabs.logansquare.LoganSquare;
@@ -35,6 +37,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private ResideMenuItem itemList;
     public static boolean host;
     static public Salut network;
+    public static String deviceName;
 
     /**
      * Called when the activity is first created.
@@ -47,24 +50,55 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setUpMenu();
         if (savedInstanceState == null)
             changeFragment(new HomeFragment(), null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Title");
+
+// Set up the input
+        final EditText input = new EditText(this);
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+        builder.setTitle("Device Name");
+
+// Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deviceName = input.getText().toString();
+                hostPrompt();
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+
+
         SalutDataReceiver dataReceiver = new SalutDataReceiver(this, this);
-        SalutServiceData serviceData = new SalutServiceData("sas", 50489, "myDevice");
+        SalutServiceData serviceData = new SalutServiceData("sas", 50489, "MyDevice");
         MainActivity.network = new Salut(dataReceiver, serviceData, new SalutCallback() {
             @Override
             public void call() {
                 Log.e("Salut", "Wifi direct not supported");
             }
         });
-        network = MainActivity.network;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+    }
+    public void hostPrompt() {
+         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 host = true;
                 startService();
             }
         });
-        builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 host = false;
@@ -74,9 +108,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         builder.setMessage("Do you want to be the host?");
         builder.create().show();
     }
-
     public void startService() {
         if (host) {
+            Log.d(TAG, "Host, starting network service");
             network.startNetworkService(new SalutDeviceCallback() {
                 @Override
                 public void call(SalutDevice device) {
@@ -84,6 +118,24 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }
             });
         } else {
+//            Log.d(TAG, "client, discvoering network services");
+//            network.discoverNetworkServices(new SalutDeviceCallback() {
+//                @Override
+//                public void call(SalutDevice device) {
+//                    Log.d(TAG, "A device has connected with the name " + device.deviceName);
+//                    network.registerWithHost(device, new SalutCallback() {
+//                        @Override
+//                        public void call() {
+//                            Log.d(TAG, "successfully connected");
+//                        }
+//                    }, new SalutCallback() {
+//                        @Override
+//                        public void call() {
+//
+//                        }
+//                    });
+//                }
+//            }, true);
         }
     }
 
@@ -212,5 +264,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public ResideMenu getResideMenu() {
         return resideMenu;
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        network.stopNetworkService(false);
 
+    }
 }
