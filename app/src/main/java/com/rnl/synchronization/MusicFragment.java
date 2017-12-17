@@ -4,7 +4,6 @@ package com.rnl.synchronization;
  * Created by L on 12/7/2017.
  */
 
-import android.app.Fragment;
 import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,7 +27,6 @@ import static com.rnl.synchronization.WiFiServiceDiscoveryActivity.TAG;
 public class MusicFragment extends ServiceFragment {
     private View parentView;
     private ListView listView;
-    Fragment someFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
