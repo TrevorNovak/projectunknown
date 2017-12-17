@@ -1,10 +1,11 @@
 package com.rnl.synchronization;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.app.FragmentTransaction;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -48,7 +49,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         itemUser = new ResideMenuItem(this, R.drawable.profile_icon, "Users");
         itemMusic = new ResideMenuItem(this, R.drawable.music_icon, "Music");
         itemCamera = new ResideMenuItem(this, R.drawable.camera_icon, "Camera");
-        itemList = new ResideMenuItem(this, R.drawable.home_icon, "Device List");
+        itemList = new ResideMenuItem(this, R.drawable.ic_cached_white, "Device List");
 
         itemHome.setOnClickListener(this);
         itemUser.setOnClickListener(this);
@@ -98,7 +99,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             changeFragment(new CameraFragment(), null);
         } else if (view == itemList) {
             try {
-                changeFragment(null, new WiFiDirectServicesList());
+                Intent i = new Intent(this, WiFiServiceDiscoveryActivity.class);
+                startActivity(i);
             } catch(Exception e) {
                 Toast.makeText(getApplicationContext(), "Error: " + e, Toast.LENGTH_LONG);
             }
