@@ -4,14 +4,27 @@ package com.rnl.synchronization;
  * Created by L on 12/7/2017.
  */
 
-import android.os.Bundle;
 import android.app.Fragment;
+import android.content.Context;
+import android.media.ToneGenerator;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.instacart.library.truetime.TrueTime;
+import com.peak.salut.Callbacks.SalutCallback;
 
 import java.util.ArrayList;
+
+import static com.rnl.synchronization.MainActivity.toneG;
+import static com.rnl.synchronization.WiFiServiceDiscoveryActivity.TAG;
 
 
 public class MusicFragment extends ServiceFragment {
@@ -24,6 +37,7 @@ public class MusicFragment extends ServiceFragment {
 
         parentView = inflater.inflate(R.layout.music, container, false);
         listView = (ListView) parentView.findViewById(R.id.musicListView);
+        serviceName = "music";
         initView();
 
 
@@ -35,9 +49,16 @@ public class MusicFragment extends ServiceFragment {
             public void onClick(View v) {
                 String title = button.getText().toString();
                 if (title.equals("Play")) {
+                    play("", new SalutCallback() {
+                        @Override
+                        public void call() {
+
+                        }
+                    });
                     button.setText("Pause");
                 } else {
                     button.setText("Play");
+                    pause();
                 }
             }
         });
@@ -45,7 +66,11 @@ public class MusicFragment extends ServiceFragment {
 
         return parentView;
     }
-
+    public static void doAction(Context context) {
+        Log.d(TAG, "trueTime says the time is: " + TrueTime.now().getTime());
+        toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
+        Log.d(TAG, "trueTime says the time is: " + TrueTime.now().getTime());
+    }
     private void initView() {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 getActivity(),

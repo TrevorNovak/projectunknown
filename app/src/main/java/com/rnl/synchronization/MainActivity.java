@@ -6,6 +6,9 @@ import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -14,6 +17,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bluelinelabs.logansquare.LoganSquare;
+import com.instacart.library.truetime.TrueTime;
 import com.peak.salut.Callbacks.SalutCallback;
 import com.peak.salut.Callbacks.SalutDataCallback;
 import com.peak.salut.Callbacks.SalutDeviceCallback;
@@ -23,6 +27,8 @@ import com.peak.salut.SalutDevice;
 import com.peak.salut.SalutServiceData;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener, SalutDataCallback {
     private static String TAG = "synchMain";
@@ -36,6 +42,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public static boolean host;
     static public Salut network;
     public static String deviceName;
+    public static ToneGenerator toneG;
 
     /**
      * Called when the activity is first created.
@@ -48,7 +55,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setUpMenu();
         if (savedInstanceState == null)
             changeFragment(new HomeFragment(), null);
+        new getTimeTask().execute("asdf");
+
         hostPrompt();
+        toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
         SalutDataReceiver dataReceiver = new SalutDataReceiver(this, this);
         SalutServiceData serviceData = new SalutServiceData("sas", 50489, "SynchDemo");
         MainActivity.network = new Salut(dataReceiver, serviceData, new SalutCallback() {
@@ -57,6 +67,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 Log.e("Salut", "Wifi direct not supported");
             }
         });
+    }
+    class getTimeTask extends AsyncTask<String, Void, Void> {
+
+        private Exception exception;
+
+        protected Void doInBackground(String... strings) {
+            try {
+                TrueTime.build().initialize();
+            } catch (Exception e) {
+                this.exception = e;
+
+                return null;
+            } finally {
+            }
+            return null;
+        }
     }
     public void hostPrompt() {
          AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -114,11 +140,24 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         try {
             MyMessage newMessage = LoganSquare.parse((String) data, MyMessage.class);
             Log.d(TAG, newMessage.description);  //See you on the other side!
-            //Do other stuff with data.
+            if (newMessage.serviceName.equals("music")) {
+                try {
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            MusicFragment.doAction(getApplicationContext());
+                        }
+                    }, newMessage.timeToTrigger - TrueTime.now().getTime());
+                } catch (IllegalArgumentException e) {
+                    Log.d(TAG, "negative delay: " + TrueTime.now().getTime() + " message says: " + newMessage.timeToTrigger);
+                }
+            }
         } catch (IOException ex) {
             Log.e(TAG, "Failed to parse network data.");
+
         }
     }
+
 
     private void setUpMenu() {
 
