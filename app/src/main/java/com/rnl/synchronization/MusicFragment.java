@@ -5,7 +5,6 @@ package com.rnl.synchronization;
  */
 
 import android.app.Fragment;
-import android.content.Context;
 import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +18,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.instacart.library.truetime.TrueTime;
-import com.peak.salut.Callbacks.SalutCallback;
 
 import java.util.ArrayList;
 
@@ -39,6 +37,7 @@ public class MusicFragment extends ServiceFragment {
         listView = (ListView) parentView.findViewById(R.id.musicListView);
         serviceName = "music";
         initView();
+        register();
 
 
         // Play Music Button
@@ -49,12 +48,7 @@ public class MusicFragment extends ServiceFragment {
             public void onClick(View v) {
                 String title = button.getText().toString();
                 if (title.equals("Play")) {
-                    play("", new SalutCallback() {
-                        @Override
-                        public void call() {
-
-                        }
-                    });
+                    play("");
                     button.setText("Pause");
                 } else {
                     button.setText("Play");
@@ -66,7 +60,7 @@ public class MusicFragment extends ServiceFragment {
 
         return parentView;
     }
-    public static void doAction(Context context) {
+    public void doAction() {
         Log.d(TAG, "trueTime says the time is: " + TrueTime.now().getTime());
         toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
         Log.d(TAG, "trueTime says the time is: " + TrueTime.now().getTime());
@@ -120,4 +114,5 @@ public class MusicFragment extends ServiceFragment {
         calendarList.add("Song 16");*/
         return musicList;
     }
+
 }

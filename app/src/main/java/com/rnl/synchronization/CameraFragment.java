@@ -16,4 +16,8 @@ public class CameraFragment extends ServiceFragment {
         return inflater.inflate(R.layout.camera, container, false);
     }
 
+    @Override
+    public void doAction() {
+
+    }
 }

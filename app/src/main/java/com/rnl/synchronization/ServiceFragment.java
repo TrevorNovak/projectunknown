@@ -9,14 +9,28 @@ import com.peak.salut.Callbacks.SalutCallback;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.rnl.synchronization.MainActivity.currentService;
 import static com.rnl.synchronization.MainActivity.network;
+import static com.rnl.synchronization.MainActivity.serviceCallback;
 import static com.rnl.synchronization.WiFiServiceDiscoveryActivity.TAG;
 
 
 abstract class ServiceFragment extends Fragment {
     public String serviceName;
-
-    public boolean play(String data, final SalutCallback callback) {
+    public void register() {
+        currentService = serviceName;
+        serviceCallback = new SalutCallback() {
+            @Override
+            public void call() {
+                doAction();
+            }
+        };
+    }
+    public void deregister() {
+        currentService = "";
+        serviceCallback = null;
+    }
+    public boolean play(String data) {
         MyMessage message = new MyMessage();
         message.description = "beep test";
         message.serviceName = serviceName;
@@ -30,15 +44,25 @@ abstract class ServiceFragment extends Fragment {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                MusicFragment.doAction(getActivity().getApplicationContext());
-                callback.call();
+                doAction();
             }
         }, message.timeToTrigger - TrueTime.now().getTime());
 
         return true;
     }
-
+    public abstract void doAction();
     public boolean pause() {
         return false;
+    }
+
+     @Override
+    public void onResume() {
+        super.onResume();
+        register();
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        deregister();
     }
 }

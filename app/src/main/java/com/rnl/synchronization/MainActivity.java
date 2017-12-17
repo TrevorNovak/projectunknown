@@ -27,6 +27,8 @@ import com.peak.salut.SalutDevice;
 import com.peak.salut.SalutServiceData;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,6 +45,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     static public Salut network;
     public static String deviceName;
     public static ToneGenerator toneG;
+    public static List<ServiceFragment> serviceFragments;
+    public static String currentService = null;
+    public static SalutCallback serviceCallback;
 
     /**
      * Called when the activity is first created.
@@ -56,7 +61,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (savedInstanceState == null)
             changeFragment(new HomeFragment(), null);
         new getTimeTask().execute("asdf");
-
+        serviceFragments = new ArrayList<>();
         hostPrompt();
         toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
         SalutDataReceiver dataReceiver = new SalutDataReceiver(this, this);
@@ -68,20 +73,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             }
         });
     }
-    class getTimeTask extends AsyncTask<String, Void, Void> {
+    class getTimeTask extends AsyncTask<String, Void, Boolean> {
 
         private Exception exception;
 
-        protected Void doInBackground(String... strings) {
+        protected Boolean doInBackground(String... strings) {
             try {
                 TrueTime.build().initialize();
             } catch (Exception e) {
                 this.exception = e;
 
-                return null;
+                return Boolean.FALSE;
             } finally {
             }
-            return null;
+            return Boolean.TRUE;
         }
     }
     public void hostPrompt() {
@@ -140,12 +145,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         try {
             MyMessage newMessage = LoganSquare.parse((String) data, MyMessage.class);
             Log.d(TAG, newMessage.description);  //See you on the other side!
-            if (newMessage.serviceName.equals("music")) {
+            if (newMessage.serviceName.equals(currentService)) {
                 try {
                     new Timer().schedule(new TimerTask() {
                         @Override
                         public void run() {
-                            MusicFragment.doAction(getApplicationContext());
+                            serviceCallback.call();
                         }
                     }, newMessage.timeToTrigger - TrueTime.now().getTime());
                 } catch (IllegalArgumentException e) {
@@ -277,5 +282,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onDestroy();
         network.stopNetworkService(false);
 
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        network.stopNetworkService(false);
     }
 }
