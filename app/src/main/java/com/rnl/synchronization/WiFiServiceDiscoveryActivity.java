@@ -66,6 +66,8 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
                 .addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
         manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(this, getMainLooper(), null);
+
+
         startRegistrationAndDiscovery();
         servicesList = new WiFiDirectServicesList();
         getFragmentManager().beginTransaction()
