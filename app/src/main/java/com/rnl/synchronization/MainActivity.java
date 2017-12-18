@@ -61,7 +61,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mContext = this;
         setUpMenu();
         if (savedInstanceState == null)
-            changeFragment(new HomeFragment(), null);
+            changeFragment(new HomeFragment(), null, null);
         new getTimeTask().execute("asdf");
         serviceFragments = new ArrayList<>();
         hostPrompt();
@@ -202,7 +202,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         resideMenu.addMenuItem(itemMusic, ResideMenu.DIRECTION_RIGHT);
         resideMenu.addMenuItem(itemCamera, ResideMenu.DIRECTION_RIGHT);
         resideMenu.addMenuItem(itemCanvas, ResideMenu.DIRECTION_RIGHT);
-        resideMenu.addMenuItem(itemList, ResideMenu.DIRECTION_RIGHT);
         resideMenu.addMenuItem(itemBeep, ResideMenu.DIRECTION_RIGHT);
 
 
@@ -243,8 +242,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             changeFragment(null, new CameraFragment(), null);
         } else if (view == itemCanvas) {
             changeFragment(null, new CanvasFragment(), null);
-        } else if (view == itemCamera) {
-            changeFragment(null, new CameraFragment(), null);
         } else if (view == itemBeep) {
             changeFragment(null, new BeepFragment(), null);
         } else if (view == itemList) {

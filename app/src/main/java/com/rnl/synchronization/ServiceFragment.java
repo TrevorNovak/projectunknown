@@ -1,8 +1,7 @@
 package com.rnl.synchronization;
 
 import android.app.Fragment;
-<<<<<<< HEAD
-=======
+
 import android.util.Log;
 
 import com.instacart.library.truetime.TrueTime;
@@ -15,7 +14,6 @@ import static com.rnl.synchronization.MainActivity.currentService;
 import static com.rnl.synchronization.MainActivity.network;
 import static com.rnl.synchronization.MainActivity.serviceCallback;
 import static com.rnl.synchronization.WiFiServiceDiscoveryActivity.TAG;
->>>>>>> e3b80b7ab36331eab5e72aa08d934100218d9e3e
 
 
 abstract class ServiceFragment extends Fragment {

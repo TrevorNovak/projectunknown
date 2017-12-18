@@ -12,4 +12,9 @@ public class CanvasFragment extends ServiceFragment {
 
         return inflater.inflate(R.layout.canvas, container, false);
     }
+
+    @Override
+    public void doAction() {
+
+    }
 }
