@@ -52,14 +52,14 @@ public class WiFiDirectServicesList extends ListFragment {
             @Override
             public void call() {
                 Log.d(TAG, "Connected!!!");
-                MyMessage myMessage = new MyMessage();
-                myMessage.description = "See you on the other side!";
-                network.sendToHost(myMessage, new SalutCallback() {
-                    @Override
-                    public void call() {
-                        Log.d(TAG, "data send failed");
-                    }
-                });
+//                MyMessage myMessage = new MyMessage();
+//                myMessage.description = "See you on the other side!";
+//                network.sendToHost(myMessage, new SalutCallback() {
+//                    @Override
+//                    public void call() {
+//                        Log.d(TAG, "data send failed");
+//                    }
+//                });
             }
         }, new SalutCallback() {
             @Override

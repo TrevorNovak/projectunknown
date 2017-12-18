@@ -12,6 +12,12 @@ public class MyMessage {
     @JsonField
     public String description;
 
+    @JsonField
+    public String serviceName;
+
+    @JsonField
+    public long timeToTrigger;
+
     /*
      * Note that since this field isn't annotated as a
      * @JsonField, LoganSquare will ignore it when parsing

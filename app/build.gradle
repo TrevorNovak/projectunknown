@@ -28,6 +28,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.github.markrjr:Salut:v0.4.9'
+    compile 'com.github.instacart.truetime-android:library:3.3'
     testCompile 'junit:junit:4.12'
 }
 

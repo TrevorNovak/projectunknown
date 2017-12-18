@@ -1,15 +1,71 @@
 package com.rnl.synchronization;
 
 import android.app.Fragment;
+<<<<<<< HEAD
+=======
+import android.util.Log;
+
+import com.instacart.library.truetime.TrueTime;
+import com.peak.salut.Callbacks.SalutCallback;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static com.rnl.synchronization.MainActivity.currentService;
+import static com.rnl.synchronization.MainActivity.network;
+import static com.rnl.synchronization.MainActivity.serviceCallback;
+import static com.rnl.synchronization.WiFiServiceDiscoveryActivity.TAG;
+>>>>>>> e3b80b7ab36331eab5e72aa08d934100218d9e3e
 
 
 abstract class ServiceFragment extends Fragment {
     public String serviceName;
-
-    public boolean play(String data) {
-        return false;
+    public void register() {
+        currentService = serviceName;
+        serviceCallback = new SalutCallback() {
+            @Override
+            public void call() {
+                doAction();
+            }
+        };
     }
+    public void deregister() {
+        currentService = "";
+        serviceCallback = null;
+    }
+    public boolean play(String data) {
+        MyMessage message = new MyMessage();
+        message.description = "beep test";
+        message.serviceName = serviceName;
+        message.timeToTrigger = TrueTime.now().getTime() + 1000;
+        network.sendToAllDevices(message, new SalutCallback() {
+            @Override
+            public void call() {
+                Log.e(TAG, "Failed to send play message for " + serviceName);
+            }
+        });
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                doAction();
+            }
+        }, message.timeToTrigger - TrueTime.now().getTime());
+
+        return true;
+    }
+    public abstract void doAction();
     public boolean pause() {
         return false;
+    }
+
+     @Override
+    public void onResume() {
+        super.onResume();
+        register();
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        deregister();
     }
 }
