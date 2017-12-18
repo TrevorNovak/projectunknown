@@ -40,6 +40,21 @@
         </activity>
         <activity android:name=".WiFiServiceDiscoveryActivity">
         </activity>
+
+        <service
+            android:name="MusicService">
+        </service>
+        <receiver
+            android:name=".MusicReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.rnl.synchronization.musicservice.A_CUSTOM_INTENT1">
+                </action>
+            </intent-filter>
+        </receiver>
+        <receiver            android:name=".MyBroadcastReceiver"            android:enabled="true"            android:exported="true" >
+        </receiver>
     </application>
 
 </manifest>

@@ -4,6 +4,7 @@ package com.rnl.synchronization;
  * Created by L on 12/7/2017.
  */
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,6 +23,8 @@ public class MusicFragment extends ServiceFragment {
     private View parentView;
     private ListView listView;
     private MediaPlayer player;
+    final MyBroadcastReceiver r2 = new MyBroadcastReceiver();
+    private boolean isServiceRunning = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,16 +58,43 @@ public class MusicFragment extends ServiceFragment {
 
         return parentView;
     }
+//    public void doAction() {
+//        if(player.isPlaying()) {
+//            player.stop();
+//            player = MediaPlayer.create(getActivity().getApplicationContext(),
+//                R.raw.braincandy);
+//            player.setLooping(false);
+//        } else {
+//            player.start();
+//        }
+//    }
+
     public void doAction() {
-        if(player.isPlaying()) {
-            player.stop();
-            player = MediaPlayer.create(getActivity().getApplicationContext(),
-                R.raw.braincandy);
-            player.setLooping(false);
-        } else {
-            player.start();
+        playMusic();
+    }
+
+    public void broadcastIntent()    // static
+    {
+        Intent intent = new Intent("MyCustomIntent");
+        // add data to the Intent
+        //intent.putExtra("message", (CharSequence)et.getText().toString());
+        intent.setAction("com.rnl.synchronization.A_CUSTOM_INTENT1");
+        getActivity().sendBroadcast(intent);
+    }
+
+    public void playMusic() {
+        if(!isServiceRunning) {
+            getActivity().startService(new Intent(getActivity(),
+                    com.rnl.synchronization.MusicService.class));
+            broadcastIntent();
+            isServiceRunning = true;
+        }
+        else {
+                getActivity().stopService(new Intent(getActivity(), MusicService.class));
+            isServiceRunning = false;
         }
     }
+
     private void initView() {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 getActivity(),
