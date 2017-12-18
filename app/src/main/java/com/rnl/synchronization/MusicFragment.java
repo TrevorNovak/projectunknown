@@ -4,9 +4,8 @@ package com.rnl.synchronization;
  * Created by L on 12/7/2017.
  */
 
-import android.media.ToneGenerator;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +15,13 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.instacart.library.truetime.TrueTime;
-
 import java.util.ArrayList;
-
-import static com.rnl.synchronization.MainActivity.toneG;
-import static com.rnl.synchronization.WiFiServiceDiscoveryActivity.TAG;
 
 
 public class MusicFragment extends ServiceFragment {
     private View parentView;
     private ListView listView;
+    private MediaPlayer player;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,7 +31,9 @@ public class MusicFragment extends ServiceFragment {
         serviceName = "music";
         initView();
         register();
-
+        player = MediaPlayer.create(getActivity().getApplicationContext(),
+                R.raw.braincandy);
+        player.setLooping(false);
 
         // Play Music Button
         final Button button = (Button) parentView.findViewById(R.id.select);
@@ -50,7 +47,7 @@ public class MusicFragment extends ServiceFragment {
                     button.setText("Pause");
                 } else {
                     button.setText("Play");
-                    pause();
+                    play("");
                 }
             }
         });
@@ -59,9 +56,14 @@ public class MusicFragment extends ServiceFragment {
         return parentView;
     }
     public void doAction() {
-        Log.d(TAG, "trueTime says the time is: " + TrueTime.now().getTime());
-        toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-        Log.d(TAG, "trueTime says the time is: " + TrueTime.now().getTime());
+        if(player.isPlaying()) {
+            player.stop();
+            player = MediaPlayer.create(getActivity().getApplicationContext(),
+                R.raw.braincandy);
+            player.setLooping(false);
+        } else {
+            player.start();
+        }
     }
     private void initView() {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(

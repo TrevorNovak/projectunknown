@@ -24,7 +24,7 @@ public class BeepFragment extends ServiceFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        parentView = inflater.inflate(R.layout.music, container, false);
+        parentView = inflater.inflate(R.layout.beep, container, false);
         serviceName = "beep";
         register();
 

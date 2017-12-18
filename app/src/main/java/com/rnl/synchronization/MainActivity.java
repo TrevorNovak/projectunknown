@@ -77,18 +77,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
     class getTimeTask extends AsyncTask<String, Void, Boolean> {
 
-        private Exception exception;
-
         protected Boolean doInBackground(String... strings) {
             try {
                 TrueTime.build().initialize();
             } catch (Exception e) {
-                this.exception = e;
-
                 return Boolean.FALSE;
-            } finally {
             }
             return Boolean.TRUE;
+        }
+        protected void onPostExecute(Boolean result) {
+           ntp_finished(result);
+        }
+    }
+    public void ntp_finished(boolean success) {
+        Toast.makeText(getApplicationContext(), "NTP was " + success, Toast.LENGTH_SHORT).show();
+        if(!success) {
+            new getTimeTask().execute("asdf");
         }
     }
     public void hostPrompt() {
