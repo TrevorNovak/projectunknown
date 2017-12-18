@@ -40,6 +40,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private ResideMenuItem itemUser;
     private ResideMenuItem itemMusic;
     private ResideMenuItem itemCamera;
+    private ResideMenuItem itemBeep;
     private ResideMenuItem itemList;
     public static boolean host;
     static public Salut network;
@@ -180,19 +181,23 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         itemUser = new ResideMenuItem(this, R.drawable.profile_icon, "Users");
         itemMusic = new ResideMenuItem(this, R.drawable.music_icon, "Music");
         itemCamera = new ResideMenuItem(this, R.drawable.camera_icon, "Camera");
+        itemBeep = new ResideMenuItem(this, android.R.drawable.stat_sys_speakerphone, "Beep");
         itemList = new ResideMenuItem(this, R.drawable.ic_cached_white, "Device List");
 
         itemHome.setOnClickListener(this);
         itemUser.setOnClickListener(this);
         itemMusic.setOnClickListener(this);
         itemCamera.setOnClickListener(this);
+        itemBeep.setOnClickListener(this);
         itemList.setOnClickListener(this);
+
 
         resideMenu.addMenuItem(itemHome, ResideMenu.DIRECTION_LEFT);
         resideMenu.addMenuItem(itemUser, ResideMenu.DIRECTION_LEFT);
         resideMenu.addMenuItem(itemMusic, ResideMenu.DIRECTION_RIGHT);
         resideMenu.addMenuItem(itemCamera, ResideMenu.DIRECTION_RIGHT);
         resideMenu.addMenuItem(itemList, ResideMenu.DIRECTION_RIGHT);
+        resideMenu.addMenuItem(itemBeep, ResideMenu.DIRECTION_RIGHT);
 
         // You can disable a direction by setting ->
         // resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
@@ -229,6 +234,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             changeFragment(new MusicFragment(), null);
         } else if (view == itemCamera) {
             changeFragment(new CameraFragment(), null);
+
+        } else if (view == itemBeep) {
+            changeFragment(new BeepFragment(), null);
         } else if (view == itemList) {
             try {
                 Intent i = new Intent(this, WiFiServiceDiscoveryActivity.class);
