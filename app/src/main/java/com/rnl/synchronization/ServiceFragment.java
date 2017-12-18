@@ -1,6 +1,6 @@
 package com.rnl.synchronization;
 
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 
 
 abstract class ServiceFragment extends Fragment {

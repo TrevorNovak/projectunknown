@@ -32,6 +32,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private ResideMenuItem itemUser;
     private ResideMenuItem itemMusic;
     private ResideMenuItem itemCamera;
+    private ResideMenuItem itemCanvas;
     private ResideMenuItem itemList;
     public static boolean host;
     static public Salut network;
@@ -47,7 +48,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mContext = this;
         setUpMenu();
         if (savedInstanceState == null)
-            changeFragment(new HomeFragment(), null);
+            changeFragment(new HomeFragment(), null, null);
         hostPrompt();
         SalutDataReceiver dataReceiver = new SalutDataReceiver(this, this);
         SalutServiceData serviceData = new SalutServiceData("sas", 50489, "SynchDemo");
@@ -74,6 +75,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 startService();
             }
         });
+
         builder.setMessage("Do you want to be the host?");
         builder.create().show();
     }
@@ -125,7 +127,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         // attach to current activity;
         resideMenu = new ResideMenu(this);
         resideMenu.setUse3D(true);
-        resideMenu.setBackground(R.drawable.menu_background);
+        //resideMenu.setBackground(R.drawable.);
         resideMenu.attachToActivity(this);
         resideMenu.setMenuListener(menuListener);
         //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip.
@@ -137,18 +139,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         itemMusic = new ResideMenuItem(this, R.drawable.music_icon, "Music");
         itemCamera = new ResideMenuItem(this, R.drawable.camera_icon, "Camera");
         itemList = new ResideMenuItem(this, R.drawable.ic_cached_white, "Device List");
+        itemCanvas = new ResideMenuItem(this, R.drawable.ic_create_white, "Canvas");
 
         itemHome.setOnClickListener(this);
         itemUser.setOnClickListener(this);
         itemMusic.setOnClickListener(this);
         itemCamera.setOnClickListener(this);
         itemList.setOnClickListener(this);
+        itemCanvas.setOnClickListener(this);
 
         resideMenu.addMenuItem(itemHome, ResideMenu.DIRECTION_LEFT);
         resideMenu.addMenuItem(itemUser, ResideMenu.DIRECTION_LEFT);
+        resideMenu.addMenuItem(itemList, ResideMenu.DIRECTION_LEFT);
         resideMenu.addMenuItem(itemMusic, ResideMenu.DIRECTION_RIGHT);
         resideMenu.addMenuItem(itemCamera, ResideMenu.DIRECTION_RIGHT);
-        resideMenu.addMenuItem(itemList, ResideMenu.DIRECTION_RIGHT);
+        resideMenu.addMenuItem(itemCanvas, ResideMenu.DIRECTION_RIGHT);
+
 
         // You can disable a direction by setting ->
         // resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
@@ -178,13 +184,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onClick(View view) {
 
         if (view == itemHome) {
-            changeFragment(new HomeFragment(), null);
+            changeFragment(new HomeFragment(), null, null);
         } else if (view == itemUser) {
-            changeFragment(new UserFragment(), null);
+            changeFragment(new UserFragment(), null, null);
         } else if (view == itemMusic) {
-            changeFragment(new MusicFragment(), null);
+            changeFragment(null, new MusicFragment(), null);
         } else if (view == itemCamera) {
-            changeFragment(new CameraFragment(), null);
+            changeFragment(null, new CameraFragment(), null);
+        } else if (view == itemCanvas) {
+            changeFragment(null, new CanvasFragment(), null);
         } else if (view == itemList) {
             try {
                 Intent i = new Intent(this, WiFiServiceDiscoveryActivity.class);
@@ -208,13 +216,21 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     };
 
-    private void changeFragment(Fragment targetFragment, ListFragment secondaryFragment) {
+    private void changeFragment(Fragment targetFragment, ServiceFragment serviceFragment, ListFragment secondaryFragment) {
         resideMenu.clearIgnoredViewList();
 
         if (targetFragment != null) {
             getFragmentManager()
                     .beginTransaction()
                     .replace(R.id.main_fragment, targetFragment, "fragment")
+                    .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .commit();
+        }
+
+        if (serviceFragment != null) {
+            getFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_fragment, serviceFragment, "fragment")
                     .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .commit();
         }

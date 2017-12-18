@@ -13,7 +13,6 @@
         android:text="Play"
         android:onClick="playMusic"
         android:background="@drawable/button_selector"
-        android:textColor="#ffacacac"
         android:textSize="20sp"
         />
     <ListView

@@ -12,7 +12,7 @@
         android:layout_gravity="center_horizontal"
         android:text="Search Devices"
         android:background="#770930"
-        android:textColor="#ffacacac"
+
         />
     <ListView
         android:id="@+id/usersListView"
