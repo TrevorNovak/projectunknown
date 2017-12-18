@@ -11,6 +11,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static com.rnl.synchronization.MainActivity.currentService;
+import static com.rnl.synchronization.MainActivity.host;
 import static com.rnl.synchronization.MainActivity.network;
 import static com.rnl.synchronization.MainActivity.serviceCallback;
 import static com.rnl.synchronization.WiFiServiceDiscoveryActivity.TAG;
@@ -32,6 +33,9 @@ abstract class ServiceFragment extends Fragment {
         serviceCallback = null;
     }
     public boolean play(String data) {
+        if(!host) {
+            return false;
+        }
         MyMessage message = new MyMessage();
         message.description = "beep test";
         message.serviceName = serviceName;

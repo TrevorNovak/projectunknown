@@ -47,11 +47,12 @@ public class WiFiDirectServicesList extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         // TODO Auto-generated method stub
         ((TextView) v.findViewById(android.R.id.text2)).setText("Connecting");
-
+        final View w = v;
         network.registerWithHost((SalutDevice) l.getAdapter().getItem(position), new SalutCallback() {
             @Override
             public void call() {
                 Log.d(TAG, "Connected!!!");
+                ((TextView) w.findViewById(android.R.id.text2)).setText("Connected");
 //                MyMessage myMessage = new MyMessage();
 //                myMessage.description = "See you on the other side!";
 //                network.sendToHost(myMessage, new SalutCallback() {

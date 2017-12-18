@@ -90,8 +90,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
     public void ntp_finished(boolean success) {
-        Toast.makeText(getApplicationContext(), "NTP was " + success, Toast.LENGTH_SHORT).show();
-        if(!success) {
+        if(success) {
+            Toast.makeText(getApplicationContext(), "Successfully calibrated via NTP", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "NTP Calibration failed, attempting again", Toast.LENGTH_SHORT).show();
             new getTimeTask().execute("asdf");
         }
     }
