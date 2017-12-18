@@ -1,7 +1,6 @@
 package com.rnl.synchronization;
 
 import android.app.Fragment;
-
 import android.util.Log;
 
 import com.instacart.library.truetime.TrueTime;
@@ -24,7 +23,12 @@ abstract class ServiceFragment extends Fragment {
         serviceCallback = new SalutCallback() {
             @Override
             public void call() {
-                doAction();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        doAction();
+                    }
+                });
             }
         };
     }

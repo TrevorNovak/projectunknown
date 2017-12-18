@@ -4,19 +4,10 @@
                 android:layout_height="fill_parent"
                 android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/client_header"
+    <Button
+        android:id="@+id/blub"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true">
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:duplicateParentState="true"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="Hellooooo" />
-    </FrameLayout>
 </RelativeLayout>

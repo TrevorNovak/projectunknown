@@ -27,7 +27,7 @@ public class WiFiServiceDiscoveryActivity extends Activity  {
     private Channel channel;
     private BroadcastReceiver receiver = null;
     private WifiP2pDnsSdServiceRequest serviceRequest;
-    private WiFiDirectServicesList servicesList;
+    private DevicesList servicesList;
     private TextView statusTxtView;
     private boolean host;
     /** Called when the activity is first created. */
@@ -36,7 +36,7 @@ public class WiFiServiceDiscoveryActivity extends Activity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wifidirect);
         statusTxtView = (TextView) findViewById(R.id.status_text);
-        servicesList = new WiFiDirectServicesList();
+        servicesList = new DevicesList();
         getFragmentManager().beginTransaction()
                 .add(R.id.container_root, servicesList, "services").commit();
         network.discoverNetworkServices(new SalutDeviceCallback() {

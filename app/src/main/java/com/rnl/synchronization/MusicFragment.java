@@ -10,13 +10,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
 
 
 public class MusicFragment extends ServiceFragment {
@@ -32,7 +27,6 @@ public class MusicFragment extends ServiceFragment {
         parentView = inflater.inflate(R.layout.music, container, false);
         listView = (ListView) parentView.findViewById(R.id.musicListView);
         serviceName = "music";
-        initView();
         register();
         player = MediaPlayer.create(getActivity().getApplicationContext(),
                 R.raw.braincandy);
@@ -58,16 +52,6 @@ public class MusicFragment extends ServiceFragment {
 
         return parentView;
     }
-//    public void doAction() {
-//        if(player.isPlaying()) {
-//            player.stop();
-//            player = MediaPlayer.create(getActivity().getApplicationContext(),
-//                R.raw.braincandy);
-//            player.setLooping(false);
-//        } else {
-//            player.start();
-//        }
-//    }
 
     public void doAction() {
         playMusic();
@@ -94,55 +78,4 @@ public class MusicFragment extends ServiceFragment {
             isServiceRunning = false;
         }
     }
-
-    private void initView() {
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                getActivity(),
-                R.layout.text_view,
-                getMusicData());
-        listView.setAdapter(arrayAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                switch (i) {
-                    case 0:
-                        Toast.makeText(getActivity(), "1 is clicked", Toast.LENGTH_LONG).show();
-                    case 1:
-                        Toast.makeText(getActivity(), "2 is clicked", Toast.LENGTH_LONG).show();
-                        break;
-                    case 2:
-                        Toast.makeText(getActivity(), "3 is clicked", Toast.LENGTH_LONG).show();
-                        break;
-                    case 3:
-                        Toast.makeText(getActivity(), "4 is clicked", Toast.LENGTH_LONG).show();
-                        break;
-                    case 4:
-                        Toast.makeText(getActivity(), "5 is clicked", Toast.LENGTH_LONG).show();
-                        break;
-                }
-            }
-        });
-    }
-
-    private ArrayList<String> getMusicData() {
-        ArrayList<String> musicList = new ArrayList<String>();
-        musicList.add("Song 1");
-        musicList.add("Song 2");
-        musicList.add("Song 3");
-        musicList.add("Song 4");
-        musicList.add("Song 5");
-        musicList.add("Song 6");
-        musicList.add("Song 7");
-        musicList.add("Song 8");
-        musicList.add("Song 9");
-        musicList.add("Song 10");
-        musicList.add("Song 11");
-        musicList.add("Song 12");
-        /*calendarList.add("Song 13");
-        calendarList.add("Song 14");
-        calendarList.add("Song 15");
-        calendarList.add("Song 16");*/
-        return musicList;
-    }
-
 }

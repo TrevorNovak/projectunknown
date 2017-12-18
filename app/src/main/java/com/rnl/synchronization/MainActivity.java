@@ -35,17 +35,13 @@ import java.util.TimerTask;
 public class MainActivity extends FragmentActivity implements View.OnClickListener, SalutDataCallback {
     private static String TAG = "synchMain";
     private ResideMenu resideMenu;
-    private MainActivity mContext;
     private ResideMenuItem itemHome;
-    private ResideMenuItem itemUser;
     private ResideMenuItem itemMusic;
-    private ResideMenuItem itemCamera;
     private ResideMenuItem itemCanvas;
     private ResideMenuItem itemBeep;
     private ResideMenuItem itemList;
     public static boolean host;
     static public Salut network;
-    public static String deviceName;
     public static ToneGenerator toneG;
     public static List<ServiceFragment> serviceFragments;
     public static String currentService = null;
@@ -58,7 +54,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mContext = this;
         setUpMenu();
         if (savedInstanceState == null)
             changeFragment(new HomeFragment(), null, null);
@@ -126,25 +121,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     Log.d(TAG, device.readableName + " has connected!");
                 }
             });
-        } else {
-//            Log.d(TAG, "client, discvoering network services");
-//            network.discoverNetworkServices(new SalutDeviceCallback() {
-//                @Override
-//                public void call(SalutDevice device) {
-//                    Log.d(TAG, "A device has connected with the name " + device.deviceName);
-//                    network.registerWithHost(device, new SalutCallback() {
-//                        @Override
-//                        public void call() {
-//                            Log.d(TAG, "successfully connected");
-//                        }
-//                    }, new SalutCallback() {
-//                        @Override
-//                        public void call() {
-//
-//                        }
-//                    });
-//                }
-//            }, true);
         }
     }
 
@@ -186,27 +162,21 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         // create menu items;
         itemHome = new ResideMenuItem(this, R.drawable.home_icon, "Home");
-        itemUser = new ResideMenuItem(this, R.drawable.profile_icon, "Users");
         itemMusic = new ResideMenuItem(this, R.drawable.music_icon, "Music");
-        itemCamera = new ResideMenuItem(this, R.drawable.camera_icon, "Camera");
         itemBeep = new ResideMenuItem(this, android.R.drawable.stat_sys_speakerphone, "Beep");
         itemList = new ResideMenuItem(this, R.drawable.ic_cached_white, "Device List");
         itemCanvas = new ResideMenuItem(this, R.drawable.ic_create_white, "Canvas");
 
         itemHome.setOnClickListener(this);
-        itemUser.setOnClickListener(this);
         itemMusic.setOnClickListener(this);
-        itemCamera.setOnClickListener(this);
         itemBeep.setOnClickListener(this);
         itemList.setOnClickListener(this);
         itemCanvas.setOnClickListener(this);
 
 
         resideMenu.addMenuItem(itemHome, ResideMenu.DIRECTION_LEFT);
-        resideMenu.addMenuItem(itemUser, ResideMenu.DIRECTION_LEFT);
         resideMenu.addMenuItem(itemList, ResideMenu.DIRECTION_LEFT);
         resideMenu.addMenuItem(itemMusic, ResideMenu.DIRECTION_RIGHT);
-        resideMenu.addMenuItem(itemCamera, ResideMenu.DIRECTION_RIGHT);
         resideMenu.addMenuItem(itemCanvas, ResideMenu.DIRECTION_RIGHT);
         resideMenu.addMenuItem(itemBeep, ResideMenu.DIRECTION_RIGHT);
 
@@ -240,12 +210,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         if (view == itemHome) {
             changeFragment(new HomeFragment(), null, null);
-        } else if (view == itemUser) {
-            changeFragment(new UserFragment(), null, null);
         } else if (view == itemMusic) {
             changeFragment(null, new MusicFragment(), null);
-        } else if (view == itemCamera) {
-            changeFragment(null, new CameraFragment(), null);
         } else if (view == itemCanvas) {
             changeFragment(null, new CanvasFragment(), null);
         } else if (view == itemBeep) {
@@ -309,7 +275,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onDestroy() {
         super.onDestroy();
-        network.stopNetworkService(false);
+        try {
+            network.stopNetworkService(false);
+        } catch(Exception e) {
+
+        }
 
     }
     @Override

@@ -20,12 +20,8 @@ import java.util.List;
 import static com.rnl.synchronization.MainActivity.network;
 import static com.rnl.synchronization.WiFiServiceDiscoveryActivity.TAG;
 
-public class WiFiDirectServicesList extends ListFragment {
+public class DevicesList extends ListFragment {
     ArrayAdapter<SalutDevice> listAdapter = null;
-
-    interface DeviceClickListener {
-        public void connectP2p(WiFiP2pService wifiP2pService);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,14 +49,7 @@ public class WiFiDirectServicesList extends ListFragment {
             public void call() {
                 Log.d(TAG, "Connected!!!");
                 ((TextView) w.findViewById(android.R.id.text2)).setText("Connected");
-//                MyMessage myMessage = new MyMessage();
-//                myMessage.description = "See you on the other side!";
-//                network.sendToHost(myMessage, new SalutCallback() {
-//                    @Override
-//                    public void call() {
-//                        Log.d(TAG, "data send failed");
-//                    }
-//                });
+
             }
         }, new SalutCallback() {
             @Override
